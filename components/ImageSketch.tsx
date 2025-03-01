@@ -9,13 +9,19 @@ let offsetX: number;
 let offsetY: number;
 
 const preload = (p5: p5Types) => {
-  img = p5.loadImage("/images/image.png");
+  img = p5.loadImage("/images/IMG_4224.png");
 };
 
 const setup = (p5: p5Types, canvasParentRef: Element) => {
   p5.createCanvas(600, 600);
   p5.noSmooth(); // Disable smoothing to achieve the pixelated effect
-  img.resize(0, 600); // Resize the image to fit the canvas
+
+  if (img.width > img.height) {
+    img.resize(0, 600);
+  } else {
+    img.resize(600, 0);
+  }
+
   offsetX = (p5.width - img.width) / 2;
   offsetY = (p5.height - img.height) / 2;
 };

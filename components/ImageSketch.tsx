@@ -96,7 +96,12 @@ const ImageSketch: React.FC<ImageSketchProps> = ({
 
   return (
     <div>
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
+      <input
+        className="border p-2 mb-2 rounded-full cursor-pointer"
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+      />
       <Sketch key={image} preload={preload} setup={setup} draw={draw} />
     </div>
   );

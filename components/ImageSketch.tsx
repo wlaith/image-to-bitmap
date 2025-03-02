@@ -1,20 +1,30 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Sketch from "react-p5";
 import p5Types from "p5";
 
-const pixelSize = 10; // Size of each pixel in the pixelation effect
+interface ImageSketchProps {
+  pixelSize: number;
+  lightsValue: number;
+  color: string;
+  background: string;
+}
 
-const ImageSketch: React.FC = () => {
-  const [image, setImage] = useState<string | null>(null); // Stores the image URL
-  const imgRef = useRef<p5Types.Image | null>(null); // Reference to the p5 image
-  const offsetX = useRef<number>(0); // Horizontal offset to center the image
-  const offsetY = useRef<number>(0); // Vertical offset to center the image
+const ImageSketch: React.FC<ImageSketchProps> = ({
+  pixelSize,
+  lightsValue,
+  color,
+  background,
+}) => {
+  const [image, setImage] = useState<string | null>(null);
+  const imgRef = useRef<p5Types.Image | null>(null);
+  const offsetX = useRef<number>(0);
+  const offsetY = useRef<number>(0);
+  const p5Ref = useRef<p5Types | null>(null); // Reference to the p5 instance
 
-  // Handle file selection
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const imgURL = URL.createObjectURL(file); // Create a temporary URL
+      const imgURL = URL.createObjectURL(file);
       setImage(imgURL);
     }
   };
@@ -23,14 +33,11 @@ const ImageSketch: React.FC = () => {
     if (image) {
       imgRef.current = p5.loadImage(image, (img) => {
         console.log("Image loaded into p5.js");
-        // Resize the image to fit within the canvas while maintaining aspect ratio
         if (img.width > img.height) {
-          img.resize(0, 600); // Resize based on height
+          img.resize(0, 600);
         } else {
-          img.resize(600, 0); // Resize based on width
+          img.resize(600, 0);
         }
-
-        // Calculate offsets to center the image
         offsetX.current = (p5.width - img.width) / 2;
         offsetY.current = (p5.height - img.height) / 2;
       });
@@ -39,39 +46,49 @@ const ImageSketch: React.FC = () => {
 
   const setup = (p5: p5Types, canvasParentRef: Element) => {
     p5.createCanvas(600, 600).parent(canvasParentRef);
-    p5.noSmooth(); // Disable smoothing to achieve the pixelated effect
+    p5.noSmooth();
+    p5Ref.current = p5; // Store the p5 instance
   };
 
   const draw = (p5: p5Types) => {
-    p5.background(255);
+    p5.background(background);
 
     if (imgRef.current && imgRef.current.width > 0) {
       const img = imgRef.current;
-      // Draw the image with pixelation effect
       for (let y = 0; y < img.height; y += pixelSize) {
         for (let x = 0; x < img.width; x += pixelSize) {
-          // Get the color of the pixel at (x, y)
           const c = img.get(x, y);
+          const brightness = p5.brightness(c);
+          const fillColor = p5.color(color); // Convert the color string to a p5 color object
 
-          // Set the fill color to the pixel color
-          p5.fill(c);
-
-          // Draw a circle representing the pixel
+          p5.fill(fillColor);
+          const circleSize = p5.map(
+            brightness,
+            lightsValue,
+            0,
+            pixelSize / 2,
+            pixelSize * 2
+          );
           p5.noStroke();
           p5.ellipse(
-            x + offsetX.current + p5.width / 2, // Apply horizontal offset
-            y + offsetY.current + p5.height / 2, // Apply vertical offset
-            pixelSize,
-            pixelSize
+            x + offsetX.current + p5.width / 2,
+            y + offsetY.current + p5.height / 2,
+            circleSize,
+            circleSize
           );
         }
       }
-
-      p5.noLoop(); // Stop drawing after one frame
     } else {
       p5.text("No image selected", p5.width / 2, p5.height / 2);
     }
   };
+
+  // Use useEffect to trigger re-renders when pixelSize changes
+  useEffect(() => {
+    if (p5Ref.current) {
+      p5Ref.current.redraw(); // Force the draw function to re-render
+    }
+  }, [pixelSize]);
 
   return (
     <div>

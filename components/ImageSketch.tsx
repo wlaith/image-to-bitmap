@@ -7,6 +7,8 @@ interface ImageSketchProps {
   lightsValue: number;
   color: string;
   background: string;
+  canvasWidth: number;
+  canvasHeight: number;
 }
 
 const ImageSketch: React.FC<ImageSketchProps> = ({
@@ -14,6 +16,8 @@ const ImageSketch: React.FC<ImageSketchProps> = ({
   lightsValue,
   color,
   background,
+  canvasWidth,
+  canvasHeight,
 }) => {
   const [image, setImage] = useState<string | null>(null);
   const imgRef = useRef<p5Types.Image | null>(null);
@@ -34,9 +38,9 @@ const ImageSketch: React.FC<ImageSketchProps> = ({
       imgRef.current = p5.loadImage(image, (img) => {
         console.log("Image loaded into p5.js");
         if (img.width > img.height) {
-          img.resize(0, 600);
+          img.resize(canvasWidth, 0);
         } else {
-          img.resize(600, 0);
+          img.resize(0, canvasHeight);
         }
         offsetX.current = (p5.width - img.width) / 2;
         offsetY.current = (p5.height - img.height) / 2;
@@ -45,7 +49,7 @@ const ImageSketch: React.FC<ImageSketchProps> = ({
   };
 
   const setup = (p5: p5Types, canvasParentRef: Element) => {
-    p5.createCanvas(600, 600).parent(canvasParentRef);
+    p5.createCanvas(canvasWidth, canvasHeight).parent(canvasParentRef);
     p5.noSmooth();
     p5Ref.current = p5; // Store the p5 instance
   };
@@ -83,7 +87,7 @@ const ImageSketch: React.FC<ImageSketchProps> = ({
     }
   };
 
-  // Use useEffect to trigger re-renders when pixelSize changes
+  // Use useEffect to trigger re-renders when pixelSize, canvasHeight, or canvasWidth change
   useEffect(() => {
     if (p5Ref.current) {
       p5Ref.current.redraw(); // Force the draw function to re-render

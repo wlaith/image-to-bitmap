@@ -11,6 +11,8 @@ export default function Home() {
   const [lightsValue, setLightsValue] = useState<number>(100);
   const [color, setColor] = useState<string>("#000000");
   const [background, setBackground] = useState<string>("#FFFFFF");
+  const [canvasWidth, setCanvasWidth] = useState<number>(600);
+  const [canvasHeight, setCanvasHeight] = useState<number>(600);
 
   return (
     <div className="p-20 flex w-full justify-between">
@@ -25,6 +27,10 @@ export default function Home() {
           setColor={setColor}
           background={background}
           setBackground={setBackground}
+          canvasWidth={canvasWidth}
+          setCanvasWidth={setCanvasWidth}
+          canvasHeight={canvasHeight}
+          setCanvasHeight={setCanvasHeight}
         />
       </div>
 
@@ -34,6 +40,8 @@ export default function Home() {
           pixelSize={pixelSize}
           color={color}
           background={background}
+          canvasWidth={canvasWidth}
+          canvasHeight={canvasHeight}
         />
       </div>
     </div>

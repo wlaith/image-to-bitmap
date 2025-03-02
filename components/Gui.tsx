@@ -12,6 +12,12 @@ interface GuiProps {
 
   background: string;
   setBackground: (background: string) => void;
+
+  canvasWidth: number;
+  setCanvasWidth: (width: number) => void;
+
+  canvasHeight: number;
+  setCanvasHeight: (height: number) => void;
 }
 
 const Gui: React.FC<GuiProps> = ({
@@ -23,6 +29,10 @@ const Gui: React.FC<GuiProps> = ({
   setColor,
   background,
   setBackground,
+  canvasWidth,
+  setCanvasWidth,
+  canvasHeight,
+  setCanvasHeight,
 }) => {
   return (
     <div>
@@ -57,6 +67,20 @@ const Gui: React.FC<GuiProps> = ({
         onChange={(e) => setBackground(e.target.value)}
       />
       <p>{background}</p>
+
+      <label className="mt-5">width</label>
+      <input
+        type="number"
+        value={canvasWidth}
+        onChange={(e) => setCanvasWidth(Number(e.target.value))}
+      />
+
+      <label className="mt-5">height</label>
+      <input
+        type="number"
+        value={canvasHeight}
+        onChange={(e) => setCanvasHeight(Number(e.target.value))}
+      />
     </div>
   );
 };

@@ -30,7 +30,7 @@ export default function Header() {
         <div className="border-l h-fill"></div>
         <a
           className="flex text-2xl items-center gap-2 rounded-full h-fit px-3 py-2 border"
-          href="https://github.com"
+          href="https://github.com/wlaith/image-to-bitmap"
           target="_blank"
           rel="noopener noreferrer"
         >

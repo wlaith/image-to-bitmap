@@ -19,8 +19,8 @@ export default function Home() {
     <div>
       <Header />
 
-      <div className="px-20 mt-5 flex gap-20 w-full justify-between">
-        <div className="w-1/3">
+      <div className="px-20 mt-5 flex gap-20 w-full justify-between max-sm:flex-col max-sm:px-5">
+        <div className="w-1/3 max-sm:w-full">
           <h1 className="mb-4">Pixelation Effect</h1>
           <Gui
             pixelSize={pixelSize}
@@ -38,7 +38,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center max-sm:order-first">
           <Sketch
             lightsValue={lightsValue}
             pixelSize={pixelSize}

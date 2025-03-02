@@ -49,7 +49,13 @@ const ImageSketch: React.FC<ImageSketchProps> = ({
   };
 
   const setup = (p5: p5Types, canvasParentRef: Element) => {
-    p5.createCanvas(canvasWidth, canvasHeight).parent(canvasParentRef);
+    if (window.innerWidth < 650) {
+      p5.createCanvas(window.innerWidth - 50, window.innerWidth - 50).parent(
+        canvasParentRef
+      );
+    } else {
+      p5.createCanvas(canvasWidth, canvasHeight).parent(canvasParentRef);
+    }
     p5.noSmooth();
     p5Ref.current = p5; // Store the p5 instance
   };
@@ -95,7 +101,7 @@ const ImageSketch: React.FC<ImageSketchProps> = ({
   }, [pixelSize]);
 
   return (
-    <div>
+    <div className="max-sm:self-center max-sm:flex max-sm:flex-col max-sm:items-center max-sm:gap-2">
       <input
         className="border p-2 mb-2 rounded-full cursor-pointer"
         type="file"

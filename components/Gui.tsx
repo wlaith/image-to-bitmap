@@ -14,8 +14,8 @@ interface GuiProps {
   background: string;
   setBackground: (background: string) => void;
 
-  canvasWidth: number;
-  setCanvasWidth: (width: number) => void;
+  image: string | null;
+  setImage: (image: string | null) => void;
 
   canvasHeight: number;
   setCanvasHeight: (height: number) => void;

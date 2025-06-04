@@ -97,7 +97,7 @@ const ImageSketch: React.FC<ImageSketchProps> = ({
     
     try {
       setIsDownloading(true);
-      const canvas = (canvasRef.current as any).elt as HTMLCanvasElement;
+      const canvas = (canvasRef.current as p5Types.Renderer).elt as HTMLCanvasElement;
       
       // Get canvas data
       const dataUrl = canvas.toDataURL('image/png');

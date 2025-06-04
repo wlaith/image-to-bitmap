@@ -17,12 +17,6 @@ interface GuiProps {
   image: string | null;
   setImage: (image: string | null) => void;
 
-  canvasHeight: number;
-  setCanvasHeight: (height: number) => void;
-
-  image: string | null;
-  setImage: (image: string | null) => void;
-
   onDownload: () => void;
 }
 
@@ -35,10 +29,6 @@ const Gui: React.FC<GuiProps> = ({
   setColor,
   background,
   setBackground,
-  canvasWidth,
-  setCanvasWidth,
-  canvasHeight,
-  setCanvasHeight,
   image,
   setImage,
   onDownload,
@@ -48,7 +38,6 @@ const Gui: React.FC<GuiProps> = ({
   const [isDownloading, setIsDownloading] = useState(false);
   const dragStartPos = useRef({ x: 0, y: 0 });
   const guiRef = useRef<HTMLDivElement>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleDownloadClick = async () => {
     setIsDownloading(true);
@@ -88,26 +77,6 @@ const Gui: React.FC<GuiProps> = ({
       // Prevent text selection while dragging
       e.preventDefault();
     }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging && guiRef.current) {
-      const guiRect = guiRef.current.getBoundingClientRect();
-      const maxX = window.innerWidth - guiRect.width;
-      const maxY = window.innerHeight - guiRect.height;
-
-      const newX = e.clientX - dragStartPos.current.x;
-      const newY = e.clientY - dragStartPos.current.y;
-
-      setPosition({
-        x: Math.min(Math.max(newX, 0), maxX),
-        y: Math.min(Math.max(newY, 0), maxY),
-      });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
   };
 
   // Add global mouse up and move handlers

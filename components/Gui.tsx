@@ -14,6 +14,12 @@ interface GuiProps {
   background: string;
   setBackground: (background: string) => void;
 
+  canvasWidth: number;
+  setCanvasWidth: (width: number) => void;
+
+  canvasHeight: number;
+  setCanvasHeight: (height: number) => void;
+
   image: string | null;
   setImage: (image: string | null) => void;
 
@@ -29,6 +35,10 @@ const Gui: React.FC<GuiProps> = ({
   setColor,
   background,
   setBackground,
+  canvasWidth,
+  setCanvasWidth,
+  canvasHeight,
+  setCanvasHeight,
   image,
   setImage,
   onDownload,
@@ -67,19 +77,16 @@ const Gui: React.FC<GuiProps> = ({
   }, []);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Only start dragging if clicking the handle area
     if (e.currentTarget.classList.contains("drag-handle")) {
       setIsDragging(true);
       dragStartPos.current = {
         x: e.clientX - position.x,
         y: e.clientY - position.y,
       };
-      // Prevent text selection while dragging
       e.preventDefault();
     }
   };
 
-  // Add global mouse up and move handlers
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       setIsDragging(false);
@@ -155,6 +162,25 @@ const Gui: React.FC<GuiProps> = ({
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
+          />
+        </div>
+
+        {/* Canvas Dimensions */}
+        <div className="flex flex-col gap-2">
+          <label>Canvas Width</label>
+          <input
+            type="number"
+            value={canvasWidth}
+            onChange={(e) => setCanvasWidth(Math.max(1, parseInt(e.target.value) || 0))}
+            className="border p-2 rounded-lg bg-white/10"
+          />
+          
+          <label>Canvas Height</label>
+          <input
+            type="number"
+            value={canvasHeight}
+            onChange={(e) => setCanvasHeight(Math.max(1, parseInt(e.target.value) || 0))}
+            className="border p-2 rounded-lg bg-white/10"
           />
         </div>
 

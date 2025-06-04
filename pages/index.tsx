@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Gui from "../components/Gui";
 import Header from "@/components/Header";
 
@@ -14,31 +14,28 @@ export default function Home() {
   const [background, setBackground] = useState<string>("#FFFFFF");
   const [canvasWidth, setCanvasWidth] = useState<number>(600);
   const [canvasHeight, setCanvasHeight] = useState<number>(600);
+  const [image, setImage] = useState<string | null>(null);
+  const [downloadFn, setDownloadFn] = useState<(() => Promise<void>) | null>(null);
+
+  const handleDownloadCallback = useCallback((callback: () => Promise<void>) => {
+    setDownloadFn(() => callback);
+  }, []);
+
+  const onDownload = useCallback(async () => {
+    if (downloadFn) {
+      await downloadFn();
+    }
+  }, [downloadFn]);
 
   return (
     <div>
       <Header />
 
-      <div className="px-20 mt-5 flex gap-20 w-full justify-between">
-        <div className="w-1/3">
-          <h1 className="mb-4">Pixelation Effect</h1>
-          <Gui
-            pixelSize={pixelSize}
-            setPixelSize={setPixelSize}
-            lightsValue={lightsValue}
-            setLightsValue={setLightsValue}
-            color={color}
-            setColor={setColor}
-            background={background}
-            setBackground={setBackground}
-            canvasWidth={canvasWidth}
-            setCanvasWidth={setCanvasWidth}
-            canvasHeight={canvasHeight}
-            setCanvasHeight={setCanvasHeight}
-          />
-        </div>
-
-        <div className="flex justify-center">
+      <div
+        className="px-20 mt-5 flex gap-20 w-full justify-between"
+        style={{ background: background }}
+      >
+        <div className="flex w-full justify-center">
           <Sketch
             lightsValue={lightsValue}
             pixelSize={pixelSize}
@@ -46,8 +43,27 @@ export default function Home() {
             background={background}
             canvasWidth={canvasWidth}
             canvasHeight={canvasHeight}
+            image={image}
+            onDownload={handleDownloadCallback}
           />
         </div>
+        <Gui
+          pixelSize={pixelSize}
+          setPixelSize={setPixelSize}
+          lightsValue={lightsValue}
+          setLightsValue={setLightsValue}
+          color={color}
+          setColor={setColor}
+          background={background}
+          setBackground={setBackground}
+          canvasWidth={canvasWidth}
+          setCanvasWidth={setCanvasWidth}
+          canvasHeight={canvasHeight}
+          setCanvasHeight={setCanvasHeight}
+          image={image}
+          setImage={setImage}
+          onDownload={onDownload}
+        />
       </div>
     </div>
   );
